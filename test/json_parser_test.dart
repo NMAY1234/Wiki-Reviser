@@ -1,7 +1,6 @@
 import 'package:test/test.dart';
-import 'dart:convert';
+import 'package:twd_nmmay_jamisontucker/revision_parser.dart';
 import 'dart:io';
-import 'package:http/http.dart';
 
 void main() {
   test('test data opened', () async {
@@ -10,7 +9,13 @@ void main() {
     expect(jsonFile, startsWith('{"continue":{"rvcontinue"'));
   });
 
-  test('Read a user revision by the name', () async {
+  test('First revision user found using revision parser', () async {
+    var result = await RevisionParser()
+        .jsonParseOutUsername(File('test/json_parser_test_file.json'));
+    expect(result, 'Tom.Reding');
+  });
+
+  /*test('Read a user revision by the name', () async {
     final jsonFile =
         await File('test/json_parser_test_file.json').readAsString();
 
@@ -22,7 +27,5 @@ void main() {
 
     expect(revisionUserName, 'Tom.Reding');
     expect(revisionTimeStamp, '2017-06-06T02:24:07Z');
-  });
-
-  test('this is a json file', () async {});
+  });*/
 }
