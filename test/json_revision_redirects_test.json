@@ -1,0 +1,92 @@
+{
+  "continue": {
+    "rvcontinue": "20220919141037|1111140769",
+    "rdcontinue": "17831618",
+    "continue": "||"
+  },
+  "query": {
+    "normalized": [
+      {
+        "from": "biden",
+        "to": "Biden"
+      }
+    ],
+    "redirects": [
+      {
+        "from": "Biden",
+        "to": "Joe Biden"
+      }
+    ],
+    "pages": {
+      "145422": {
+        "pageid": 145422,
+        "ns": 0,
+        "title": "Joe Biden",
+        "revisions": [
+          {
+            "user": "Wallnot",
+            "timestamp": "2022-09-19T22:47:24Z"
+          },
+          {
+            "user": "Valjean",
+            "timestamp": "2022-09-19T21:00:15Z"
+          },
+          {
+            "user": "Kyleung05",
+            "timestamp": "2022-09-19T20:45:25Z"
+          },
+          {
+            "user": "Kyleung05",
+            "timestamp": "2022-09-19T20:40:08Z"
+          },
+          {
+            "user": "Kyleung05",
+            "timestamp": "2022-09-19T20:37:02Z"
+          }
+        ],
+        "redirects": [
+          {
+            "ns": 0,
+            "title": "Joseph Biden"
+          },
+          {
+            "ns": 0,
+            "title": "Joseph Biden Jr."
+          },
+          {
+            "ns": 0,
+            "title": "Joseph Robinette Jr. Biden"
+          },
+          {
+            "ns": 0,
+            "title": "Biden, Joseph R., Jr."
+          },
+          {
+            "ns": 0,
+            "title": "Joseph R. Biden"
+          },
+          {
+            "ns": 0,
+            "title": "Joseph R. Biden, Jr."
+          },
+          {
+            "ns": 0,
+            "title": "Joseph R. Biden, Jr"
+          },
+          {
+            "ns": 0,
+            "title": "Joe biden"
+          },
+          {
+            "ns": 0,
+            "title": "Biden"
+          },
+          {
+            "ns": 0,
+            "title": "Joesph Biden"
+          }
+        ]
+      }
+    }
+  }
+}

@@ -25,4 +25,20 @@ void main() {
     ];
     expect(expectedNames, revisions);
   });
+
+  test('this is a test to find the redirects', () async {
+    String jsonFile =
+        await File('test/json_revision_redirects_test.json').readAsString();
+    final jsonDataAsMap = jsonDecode(jsonFile);
+    var redirect = await RevisionParser().hasRedirects(jsonDataAsMap);
+    expect(redirect, 'Joe Biden');
+  });
+
+  test('there are no redirects', () async {
+    String jsonFile =
+        await File('test/json_parser_test_file.json').readAsString();
+    final jsonDataAsMap = jsonDecode(jsonFile);
+    var redirect = await RevisionParser().hasRedirects(jsonDataAsMap);
+    expect(redirect, 'No Redirects');
+  });
 }
