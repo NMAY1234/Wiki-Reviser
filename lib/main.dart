@@ -56,13 +56,16 @@ class _WikipediaRevisionHistoryHomePage
   }
 
   void _onButtonPressed() async {
-    String result;
     String input = _controller.value.text;
-    http.Response result =
-        await http.get(Uri.parse(wikipediaURLbuilder.searchTermToUrl(input)));
+    var urlToSendRequest =
+        Uri.parse(WikipediaURLBuilder().searchTermToUrl(input));
+    var response = await http.post(urlToSendRequest, headers: {
+      'user-agent':
+          'Revision Reporter/0.1 (http://www.cs.bsu.edu/~pvg/courses/cs222Fa22; nmmay@bsu.edu)'
+    });
 
     setState(() {
-      _message = result;
+      // _message = result;
     });
   }
 }
