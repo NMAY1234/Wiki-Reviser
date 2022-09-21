@@ -1,6 +1,7 @@
 import 'package:test/test.dart';
 import 'package:twd_nmmay_jamisontucker/revision_parser.dart';
 import 'dart:io';
+import 'dart:convert';
 
 void main() {
   test('test data opened', () async {
@@ -10,7 +11,7 @@ void main() {
   });
 
   test('List of user names of revisions using revision_parser', () async {
-    var expectedNames = [
+    var expectedNamesAndTimeStamps = [
       'Tom.Reding',
       '2017-06-06T02:24:07Z',
       'Mwtoews',
@@ -22,22 +23,11 @@ void main() {
       'Fang Aili',
       '2007-04-16T16:10:30Z'
     ];
-    var result = await RevisionParser().jsonParseOutUsernameAndTimestamp(
-        File('test/json_parser_test_file.json'));
-    expect(result, expectedNames);
-  });
-
-  test('This is the list of timestamps of revisions using revision_parser',
-      () async {
-    var expectedTimestamps = [
-      '2017-06-06T02:24:07Z',
-      '2008-01-29T22:55:53Z',
-      '2007-05-02T21:51:23Z',
-      '2007-05-02T19:58:50Z',
-      '2007-04-16T16:10:30Z'
-    ];
-    var result = await RevisionParser().jsonParseOutUsernameAndTimestamp(
-        File('test/json_parser_test_file.json'));
-    expect(result, expectedTimestamps);
+    String jsonFile =
+        await File('test/json_parser_test_file.json').readAsString();
+    final jsonDataAsMap = jsonDecode(jsonFile);
+    var result =
+        await RevisionParser().jsonParseOutUsernameAndTimestamp(jsonDataAsMap);
+    expect(result, expectedNamesAndTimeStamps);
   });
 }

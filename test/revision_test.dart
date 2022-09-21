@@ -3,14 +3,14 @@ import 'package:twd_nmmay_jamisontucker/revision_parser.dart';
 import 'dart:io';
 import 'dart:convert';
 
-void main() {
-  test('this tests the map parameter', () async {
-    String jsonFile =
-        await File('test/json_parser_test_file.json').readAsString();
-    final jsonDataAsMap = jsonDecode(jsonFile);
+void main() async {
+  String jsonFilePotato =
+      await File('test/json_parser_test_file.json').readAsString();
+  final jsonDataAsMap = jsonDecode(jsonFilePotato);
+
+  test('the map parameter input', () async {
     var revisions =
         await RevisionParser().jsonParseOutUsernameAndTimestamp(jsonDataAsMap);
-
     var expectedNames = [
       'Tom.Reding',
       '2017-06-06T02:24:07Z',
@@ -26,18 +26,12 @@ void main() {
     expect(expectedNames, revisions);
   });
 
-  test('this is a test to find the redirects', () async {
-    String jsonFile =
-        await File('test/json_revision_redirects_test.json').readAsString();
-    final jsonDataAsMap = jsonDecode(jsonFile);
+  test('Located the redirects', () async {
     var redirect = await RevisionParser().hasRedirects(jsonDataAsMap);
     expect(redirect, 'Joe Biden');
   });
 
-  test('there are no redirects', () async {
-    String jsonFile =
-        await File('test/json_parser_test_file.json').readAsString();
-    final jsonDataAsMap = jsonDecode(jsonFile);
+  test('There are no redirects', () async {
     var redirect = await RevisionParser().hasRedirects(jsonDataAsMap);
     expect(redirect, 'No Redirects');
   });
