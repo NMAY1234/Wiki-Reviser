@@ -10,6 +10,7 @@ void main() {
     final jsonDataAsMap = jsonDecode(jsonFile);
     var revisions =
         await RevisionParser().jsonParseOutUsernameAndTimestamp(jsonDataAsMap);
+
     var expectedNames = [
       'Tom.Reding',
       '2017-06-06T02:24:07Z',

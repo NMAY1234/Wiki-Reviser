@@ -11,8 +11,8 @@ class RevisionParser {
     final revisionHistory =
         fileFromRequest["query"]["pages"].entries.first.value["revisions"];
 
-    var iterator = 0;
     var revisionList = [];
+    var iterator = 0;
     for (var i = iterator; i < 5; i++) {
       revisionList.add(revisionHistory[i]["user"]);
       revisionList.add(revisionHistory[i]["timestamp"]);
@@ -20,7 +20,7 @@ class RevisionParser {
     return revisionList;
   }
 
-  hasDisconnectionsFromNetwork() {}
+  hasDisconnectionsFromNetwork(Map fileFromRequest) {}
 
-  hasRedirects() {}
+  hasRedirects(Map fileFromRequests) {}
 }
