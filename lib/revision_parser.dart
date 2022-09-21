@@ -2,18 +2,25 @@ import 'dart:convert';
 import 'dart:io';
 
 class RevisionParser {
-  Future<List> jsonParseOutUsername(File fileFromRequest) async {
-    final jsonFileFromRequest = await fileFromRequest.readAsString();
-    final jsonDataAsMap = jsonDecode(jsonFileFromRequest);
+  Future<List> jsonParseOutUsernameAndTimestamp(Map fileFromRequest) async {
+    //parameter will be changed for use with strings
 
+    /*final jsonFileFromRequest = await fileFromRequest
+        .readAsString(); //might be deleted for use with strings
+    final jsonDataAsMap = jsonDecode(jsonFileFromRequest);*/
     final revisionHistory =
-        jsonDataAsMap["query"]["pages"].entries.first.value["revisions"];
+        fileFromRequest["query"]["pages"].entries.first.value["revisions"];
 
-    var num = 0;
-    var nameList = [];
-    for (var i = num; i <= 5; i++) {
-      nameList.add(revisionHistory[i]["user"]);
+    var iterator = 0;
+    var revisionList = [];
+    for (var i = iterator; i < 5; i++) {
+      revisionList.add(revisionHistory[i]["user"]);
+      revisionList.add(revisionHistory[i]["timestamp"]);
     }
-    return nameList;
+    return revisionList;
   }
+
+  hasDisconnectionsFromNetwork() {}
+
+  hasRedirects() {}
 }
