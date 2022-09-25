@@ -2,6 +2,7 @@ class RevisionParser {
   Future<List> jsonParseOutUsernameAndTimestamp(Map fileFromRequest) async {
     final revisionHistory =
         fileFromRequest["query"]["pages"].entries.first.value["revisions"];
+
     final revisionHistoryLength = revisionHistory.length;
 
     var revisionList = [];

@@ -87,22 +87,28 @@ class _WikipediaRevisionHistoryHomePage
         _isProcessing = false;
       });
     }
-    final urlToSendRequest = Uri.parse(
+    final userSearchTermAsUri = Uri.parse(
         WikipediaURLBuilder().searchTermToUrl(_controller.value.text));
 
-    final responseData = await NetworkReader().readResponse(urlToSendRequest);
-    final jsonFileFromResponse = responseData.body.toString();
-    final jsonFileAsDataMap = jsonDecode(jsonFileFromResponse);
+    final receivedWikipediaResponse =
+        await NetworkReader().readResponse(userSearchTermAsUri);
+    final wikipediaJsonFile = receivedWikipediaResponse.body.toString();
+    if (wikipediaJsonFile.startsWith('{"batchcomplete":')) {
+      setState(() {
+        _message = 'No such page exists for most recent search';
+        _isProcessing = false;
+      });
+    }
 
-    final revisionsFromResponse = await RevisionParser()
-        .jsonParseOutUsernameAndTimestamp(jsonFileAsDataMap);
-    final redirectFromResponse =
-        RevisionParser().hasRedirects(jsonFileAsDataMap);
+    final wikipediaDataMap = jsonDecode(wikipediaJsonFile);
+    final wikipediaRevisionData = await RevisionParser()
+        .jsonParseOutUsernameAndTimestamp(wikipediaDataMap);
+    final wikipediaRedirectData =
+        RevisionParser().hasRedirects(wikipediaDataMap);
 
-    var networkStatusFromResponse = responseData.statusCode;
+    var networkResponseStatus = receivedWikipediaResponse.statusCode;
     final String wikiStatusMessage;
-
-    if (networkStatusFromResponse != 200) {
+    if (networkResponseStatus != 200) {
       wikiStatusMessage = """
       Your network request took too long to process.
       Please try again.
@@ -114,10 +120,9 @@ class _WikipediaRevisionHistoryHomePage
     } else {
       wikiStatusMessage = "Good connection made!";
     }
-
     setState(() {
-      _revisions = revisionsFromResponse;
-      _message = '$wikiStatusMessage $redirectFromResponse';
+      _revisions = wikipediaRevisionData;
+      _message = '$wikiStatusMessage $wikipediaRedirectData';
       _isProcessing = false;
     });
   }
