@@ -23,7 +23,8 @@ class RevisionParser {
   hasRedirects(Map fileFromRequest) {
     final redirectKey = fileFromRequest["query"];
     if (redirectKey.containsKey(["redirects"][0])) {
-      return redirectKey["redirects"][0]["to"];
+      String rKey = redirectKey["redirects"][0]["to"];
+      return 'Redirected to $rKey';
     } else {
       return "No Redirects";
     }

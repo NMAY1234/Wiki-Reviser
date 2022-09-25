@@ -38,12 +38,10 @@ class WikipediaRevisionHistoryHomePage extends StatefulWidget {
 
 class _WikipediaRevisionHistoryHomePage
     extends State<WikipediaRevisionHistoryHomePage> {
-  final _message = 'Type in a the key word for a wikipedia article';
+  String _message = 'Type in a the key word for a wikipedia article';
   final _controller = TextEditingController();
   bool _isProcessing = false;
   List<dynamic> _revisions = [];
-  String _responseStatus = "";
-  String _redirects = "";
 
   @override
   Widget build(BuildContext context) {
@@ -60,9 +58,20 @@ class _WikipediaRevisionHistoryHomePage
               onPressed: _isProcessing ? null : _onButtonPressed,
               child: const Text("Search")),
           Text(_message),
-          Column(
-            children:
-                _revisions.map((revision) => Text(revision.username)).toList(),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              Column(
+                children: _revisions
+                    .map((revision) => Text(revision.username))
+                    .toList(),
+              ),
+              Column(
+                children: _revisions
+                    .map((revision) => Text(revision.timestamp))
+                    .toList(),
+              ),
+            ],
           ),
         ],
       ),
@@ -70,7 +79,14 @@ class _WikipediaRevisionHistoryHomePage
   }
 
   void _onButtonPressed() async {
-    _isProcessing = true;
+    setState(() {
+      _isProcessing = true;
+    });
+    if (_controller.value.text == '') {
+      setState(() {
+        _isProcessing = false;
+      });
+    }
     final urlToSendRequest = Uri.parse(
         WikipediaURLBuilder().searchTermToUrl(_controller.value.text));
 
@@ -80,14 +96,28 @@ class _WikipediaRevisionHistoryHomePage
 
     final revisionsFromResponse = await RevisionParser()
         .jsonParseOutUsernameAndTimestamp(jsonFileAsDataMap);
-    final networkStatusFromResponse = responseData.statusCode;
     final redirectFromResponse =
         RevisionParser().hasRedirects(jsonFileAsDataMap);
 
+    var networkStatusFromResponse = responseData.statusCode;
+    final String wikiStatusMessage;
+
+    if (networkStatusFromResponse != 200) {
+      wikiStatusMessage = """
+      Your network request took too long to process.
+      Please try again.
+      """;
+      setState(() {
+        _message = wikiStatusMessage;
+        _isProcessing = false;
+      });
+    } else {
+      wikiStatusMessage = "Good connection made!";
+    }
+
     setState(() {
       _revisions = revisionsFromResponse;
-      _responseStatus = networkStatusFromResponse.toString();
-      _redirects = redirectFromResponse;
+      _message = '$wikiStatusMessage $redirectFromResponse';
       _isProcessing = false;
     });
   }
