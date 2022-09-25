@@ -10,24 +10,23 @@ void main() {
     expect(jsonFile, startsWith('{"continue":{"rvcontinue"'));
   });
 
-  test('List of user names of revisions using revision_parser', () async {
-    var expectedNamesAndTimeStamps = [
-      'Tom.Reding',
-      '2017-06-06T02:24:07Z',
-      'Mwtoews',
-      '2008-01-29T22:55:53Z',
-      'Gurch',
-      '2007-05-02T21:51:23Z',
-      '166.113.0.70',
-      '2007-05-02T19:58:50Z',
-      'Fang Aili',
-      '2007-04-16T16:10:30Z'
-    ];
+  test('User name and timestamp of revision using revision_parser', () async {
+    var expectedNameAndTimeStamp = 'Tom.Reding 2017-06-06T02:24:07Z';
     String jsonFile =
         await File('test/json_parser_test_file.json').readAsString();
     final jsonDataAsMap = jsonDecode(jsonFile);
     var result =
         await RevisionParser().jsonParseOutUsernameAndTimestamp(jsonDataAsMap);
-    expect(result, expectedNamesAndTimeStamps);
+    var resultUsername = result[0].username;
+    var resultTime = result[0].timestamp;
+    String expectedResult = resultUsername + ' ' + resultTime;
+
+    expect(expectedResult, expectedNameAndTimeStamp);
+  });
+
+  test('the time?', () {
+    var time = '2007-04-16T16:10:30Z';
+    var newTime = DateTime.parse(time).toString().substring(0, time.length - 1);
+    expect(newTime, '2007-04-16 16:10:30');
   });
 }

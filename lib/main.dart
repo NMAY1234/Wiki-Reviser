@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
+import 'package:twd_nmmay_jamisontucker/network_reader.dart';
 import 'package:twd_nmmay_jamisontucker/wikipedia_url_builder.dart';
+import 'package:twd_nmmay_jamisontucker/revision_parser.dart';
+import 'dart:convert';
 
 void main() {
   runApp(const MyApp());
@@ -26,8 +28,7 @@ class WikipediaRevisionHistoryHomePage extends StatefulWidget {
   const WikipediaRevisionHistoryHomePage({Key? key}) : super(key: key);
 
   @override
-  State<WikipediaRevisionHistoryHomePage> createState() =>
-      _WikipediaRevisionHistoryHomePage();
+  State<StatefulWidget> createState() => _WikipediaRevisionHistoryHomePage();
 }
 
 class _WikipediaRevisionHistoryHomePage
@@ -43,29 +44,44 @@ class _WikipediaRevisionHistoryHomePage
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
           SizedBox(
-            child: TextField(controller: _controller),
             width: 200,
+            child: TextField(controller: _controller),
           ),
           ElevatedButton(
-            onPressed: _onButtonPressed,
-            child: Text("Search"),
-          ),
+              onPressed: _onButtonPressed, child: const Text("Search")),
+          Text(_message),
         ],
       ),
     );
   }
 
   void _onButtonPressed() async {
-    String input = _controller.value.text;
-    var urlToSendRequest =
-        Uri.parse(WikipediaURLBuilder().searchTermToUrl(input));
-    var response = await http.post(urlToSendRequest, headers: {
-      'user-agent':
-          'Revision Reporter/0.1 (http://www.cs.bsu.edu/~pvg/courses/cs222Fa22; nmmay@bsu.edu)'
-    });
+    final urlToSendRequest = Uri.parse(
+        WikipediaURLBuilder().searchTermToUrl(_controller.value.text));
+
+    final responseData = await NetworkReader().readResponse(urlToSendRequest);
+    final jsonFileFromResponse = responseData.toString();
+    final jsonFileAsDataMap = jsonDecode(jsonFileFromResponse);
+
+    final revisionsFromResponse =
+        RevisionParser().jsonParseOutUsernameAndTimestamp(jsonFileAsDataMap);
+    //final networkStatusFromResponse = responseData.statusCode;
+    final redirectFromResponse =
+        RevisionParser().hasRedirects(jsonFileAsDataMap);
 
     setState(() {
-      // _message = result;
+      _message = revisionsFromResponse.toString();
     });
+  }
+}
+
+class Revision extends StatelessWidget {
+  const Revision({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [],
+    );
   }
 }
