@@ -10,7 +10,7 @@ application and returns two columns of information; one with the editor's userna
 with the time stamp of the edit. A user-agent heading is also used to allow the code to interact
 with Wikipedia safely, and to identify the program in the requests.
 
-#User-Agent Heading Used
+#User-Agent Heading Used 
 'Revision Reporter/0.1 (http://www.cs.bsu.edu/~pvg/courses/cs222Fa22; nmmay@bsu.edu)'
 
 This project was a collaboration between Noah May and Jamison Tucker.
