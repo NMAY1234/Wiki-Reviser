@@ -1,7 +1,7 @@
-# twd_nmmay_jamisontucker
+ twd_nmmay_jamisontucker
 
-##Revision Finder
-# v0.1.0
+#Revision Finder
+ v0.1.0
 In this application, a list of 30 Wikipedia revisions is queried from a specified article and shown
 through an android application. This application uses MediaWiki's API to make a query to request this
 information in a JSON formatted file. The file is then decoded to a map which is then changed to a 
