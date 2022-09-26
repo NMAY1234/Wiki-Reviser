@@ -3,6 +3,7 @@ import 'package:twd_nmmay_jamisontucker/network_reader.dart';
 import 'package:twd_nmmay_jamisontucker/wikipedia_url_builder.dart';
 import 'package:twd_nmmay_jamisontucker/revision_parser.dart';
 import 'dart:convert';
+import 'package:internet_connection_checker/internet_connection_checker.dart';
 
 void main() {
   runApp(const MyApp());
@@ -20,6 +21,7 @@ class MyApp extends StatelessWidget {
         ),
         home: Scaffold(
           appBar: AppBar(
+            toolbarHeight: 20,
             title: const Text(
               "Revision Finder",
             ),
@@ -51,7 +53,8 @@ class _WikipediaRevisionHistoryHomePage
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           SizedBox(
-            width: 300,
+            width: 250,
+            height: 25,
             child: TextField(controller: _controller),
           ),
           ElevatedButton(
@@ -82,20 +85,32 @@ class _WikipediaRevisionHistoryHomePage
     setState(() {
       _isProcessing = true;
     });
+
     if (_controller.value.text == '') {
       setState(() {
         _isProcessing = false;
       });
     }
+
+    String wikiStatusMessage;
+    var userInternetStatus = await InternetConnectionChecker().hasConnection;
+    if (userInternetStatus == false) {
+      wikiStatusMessage = 'No Internet Connection';
+      setState(() {
+        _message = wikiStatusMessage;
+        _isProcessing = false;
+      });
+    }
+
     final userSearchTermAsUri = Uri.parse(
         WikipediaURLBuilder().searchTermToUrl(_controller.value.text));
-
     final receivedWikipediaResponse =
         await NetworkReader().readResponse(userSearchTermAsUri);
+
     final wikipediaJsonFile = receivedWikipediaResponse.body.toString();
     if (wikipediaJsonFile.startsWith('{"batchcomplete":')) {
       setState(() {
-        _message = 'No such page exists for most recent search';
+        _message = 'No such page exists for ${_controller.value.text}';
         _isProcessing = false;
       });
     }
@@ -105,24 +120,26 @@ class _WikipediaRevisionHistoryHomePage
         .jsonParseOutUsernameAndTimestamp(wikipediaDataMap);
     final wikipediaRedirectData =
         RevisionParser().hasRedirects(wikipediaDataMap);
+    final pageName = RevisionParser().showsExactPageName(wikipediaDataMap);
+    final networkResponseStatus = receivedWikipediaResponse.statusCode;
 
-    var networkResponseStatus = receivedWikipediaResponse.statusCode;
-    final String wikiStatusMessage;
-    if (networkResponseStatus != 200) {
+    if (networkResponseStatus == 200) {
+      wikiStatusMessage = 'Connection made! Code: 200';
+    } else {
       wikiStatusMessage = """
       Your network request took too long to process.
-      Please try again.
+      Please try again. Error Code: $networkResponseStatus
       """;
       setState(() {
         _message = wikiStatusMessage;
         _isProcessing = false;
       });
-    } else {
-      wikiStatusMessage = "Good connection made!";
     }
+
     setState(() {
       _revisions = wikipediaRevisionData;
-      _message = '$wikiStatusMessage $wikipediaRedirectData';
+      _message =
+          '$wikiStatusMessage $wikipediaRedirectData\n Your Page Name: $pageName';
       _isProcessing = false;
     });
   }

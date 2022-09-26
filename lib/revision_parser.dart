@@ -17,7 +17,7 @@ class RevisionParser {
   }
 
   formatIso8601toUTC(var time) {
-    var utcTime = DateTime.parse(time).toString().substring(0, time.length - 1);
+    var utcTime = DateTime.parse(time).toString().substring(0, time.length - 4);
     return utcTime;
   }
 
@@ -29,6 +29,12 @@ class RevisionParser {
     } else {
       return "No Redirects";
     }
+  }
+
+  showsExactPageName(Map fileFromRequest) {
+    final pageNameData =
+        fileFromRequest["query"]["pages"].entries.first.value["title"];
+    return pageNameData;
   }
 }
 
